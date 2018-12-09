@@ -1,0 +1,9 @@
+#require "logs"
+#directory "_build/src"
+#load "unmark.cma"
+
+#require "cmdliner notty bos rresult fmt.tty logs.fmt logs.cli"
+#directory "_build/src-cli"
+#load "unmark_cli.cma"
+
+#require "notty.top"

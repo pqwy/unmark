@@ -1,0 +1,27 @@
+true: bin_annot, safe_string, color(always), warn(A-4-42-44-48-58)
+true: package(bytes unix logs)
+
+<src>: include
+<src/*.cm{,x}a>: link_stubs(src/libunmark_stubs.clib)
+<src/native/*.c>: ccopt(-O3 -Wall -Wextra)
+
+<src-cli>: include
+<src-cli/*.ml{,i}>: use_unmark
+<src-cli/*.ml{,i}>: package(cmdliner rresult bos fmt fmt.tty logs.fmt logs.cli)
+
+<src-bin/*>: use_unmark
+<src-bin/*>: package(notty notty.unix cmdliner bos)
+<src-bin/*>: package(ptime ptime.clock.os)
+<src-bin/*>: package(fmt fmt.tty logs.fmt logs.cli)
+
+<src-papi>: include
+<src-papi/*>: package(papi)
+
+<test>: include
+<test/*>: use_unmark, package(cmdliner bos logs.fmt logs.cli fmt.tty)
+<test/arrays.*>: package(bigarray)
+<test/nottys.*>: package(notty)
+<test/alloc.*>: package(bigarray)
+<test/*>: use_unmark_papi, package(papi)
+
+<rondom>: -traverse

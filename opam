@@ -1,0 +1,29 @@
+opam-version: "2.0"
+maintainer:   ["David Kaloper Meršinjak <dk505@cam.ac.uk>"]
+authors:      ["David Kaloper Meršinjak <dk505@cam.ac.uk>"]
+license:      "ISC"
+homepage:     "https://github.com/pqwy/unmark"
+doc:          "https://pqwy.github.io/unmark/doc"
+dev-repo:     "git+https://github.com/pqwy/unmark.git"
+bug-reports:  "https://github.com/pqwy/unmark/issues"
+synopsis:     "Painless micro-benchmarks"
+
+build: [ "ocaml" "pkg/pkg.ml" "build" "--dev-pkg" "%{dev}%"
+         "--with-papi" "%{papi:installed}%" ]
+
+depends: [
+  "ocaml" { >= "4.05.0" }
+  "ocamlfind" {build}
+  "ocamlbuild" {build}
+  "topkg" {build}
+  "ocb-stubblr" {build}
+  "logs"
+  "rresult"
+  "fmt"
+  "bos"
+  "cmdliner"
+  "ptime"
+  "notty"
+]
+
+depopts: [ "papi" ]

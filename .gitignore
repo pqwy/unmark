@@ -2,12 +2,17 @@ _build
 *.install
 *.native
 *.byte
+__pycache__/
 
 tmp
 *~
 \.\#*
 \#*#
 
+.ipynb_checkpoints/
+*.ipynb
+
 .gdb_history
 gmon.out
 rondom
+TODO.md

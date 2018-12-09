@@ -1,0 +1,29 @@
+description = "Painless micro-benchmarks"
+version = "%%VERSION_NUM%%"
+requires = "unix logs"
+archive(byte) = "unmark.cma"
+archive(native) = "unmark.cmxa"
+plugin(byte) = "unmark.cma"
+plugin(native) = "unmark.cmxs"
+
+package "cli" (
+  description = "Unmark CLI runner"
+  version = "%%VERSION_NUM%%"
+  requires = "unmark cmdliner notty fmt fmt.tty logs logs.fmt logs.cli bos"
+  archive(byte) = "unmark_cli.cma"
+  archive(native) = "unmark_cli.cmxa"
+  plugin(byte) = "unmark_cli.cma"
+  plugin(native) = "unmark_cli.cmxs"
+  exists_if = "unmark_cli.cma"
+)
+
+package "papi" (
+  description = "Performance Application Programming Interface (PAPI) probes"
+  version = "%%VERSION_NUM%%"
+  requires = "unmark papi"
+  archive(byte) = "unmark_papi.cma"
+  archive(native) = "unmark_papi.cmxa"
+  plugin(byte) = "unmark_papi.cma"
+  plugin(native) = "unmark_papi.cmxs"
+  exists_if = "unmark_papi.cma"
+)

@@ -1,0 +1,89 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<link rel="stylesheet" href="style.css" type="text/css">
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="Start" href="index.html">
+<link rel="previous" href="Unmark.html">
+<link rel="Up" href="index.html">
+<link title="Index of types" rel=Appendix href="index_types.html">
+<link title="Index of values" rel=Appendix href="index_values.html">
+<link title="Index of modules" rel=Appendix href="index_modules.html">
+<link title="Unmark" rel="Chapter" href="Unmark.html">
+<link title="Unmark_cli" rel="Chapter" href="Unmark_cli.html"><link title="Interface" rel="Section" href="#1_Interface">
+<link title="Example usage" rel="Section" href="#1_Exampleusage">
+<title>Unmark_cli</title>
+</head>
+<body>
+<div class="navbar"><a class="pre" href="Unmark.html" title="Unmark">Previous</a>
+&nbsp;<a class="up" href="index.html" title="Index">Up</a>
+&nbsp;</div>
+<h1>Module <a href="type_Unmark_cli.html">Unmark_cli</a></h1>
+
+<pre><span id="MODULEUnmark_cli"><span class="keyword">module</span> Unmark_cli</span>: <code class="code"><span class="keyword">sig</span></code> <a href="Unmark_cli.html">..</a> <code class="code"><span class="keyword">end</span></code></pre><div class="info module top">
+<div class="info-desc">
+<p>Unmark CLI runner.</p>
+
+<p>Functions in this module consume <a href="Unmark.html#VALbench">benchmarks</a> and turn them
+    into ready-to-run executables.</p>
+
+<p><em>d759a53 — <a href="https://github.com/pqwy/unmark ">homepage</a></em></p>
+</div>
+</div>
+<hr width="100%">
+<h2 id="1_Interface">Interface</h2>
+<pre><span id="VALmain"><span class="keyword">val</span> main</span> : <code class="type">?probe:<a href="Unmark.Measurement.Probe.html#TYPEprobe">Unmark.Measurement.Probe.probe</a> -><br>       ?min_t:float -><br>       ?min_s:int -><br>       ?def_filter:<a href="Unmark.Benchmarks.html#TYPEquery">Unmark.Benchmarks.query</a> -> string -> <a href="Unmark.html#TYPEbench">Unmark.bench</a> list -> unit</code></pre><div class="info ">
+<div class="info-desc">
+<p>Benchmark entry point.</p>
+
+<p><code class="code">main&nbsp;suite&nbsp;benchmarks</code> implements the benchmark suite named <code class="code">suite</code>, which
+    consists of benchmarks <code class="code">benchmarks</code>.</p>
+
+<p><code class="code">probe</code> is the measurement <a href="Unmark.Measurement.Probe.html#VALprobe">probe</a>.
+    Default <a href="Unmark_cli.html#VALprobe"><code class="code"><span class="constructor">Unmark_cli</span>.probe</code></a>.</p>
+
+<p><code class="code">min_t</code>, <code class="code">min_s</code> default per-benchmark minimum time and samples, which can
+    be overridden from the command line. Default <code class="code">1.</code> and <code class="code">10</code>.</p>
+
+<p><code class="code">def_filter</code> is a <a href="Unmark.Benchmarks.html#filtering">query</a> applied to
+    <code class="code">benchmarks</code>, which can be overridden from the command line. Default <code class="code">[]</code>.</p>
+
+<p>This invocation will:</p>
+
+<OL>
+<li>parse the command-line arguments;</li>
+<li>perform memasurements using <code class="code">probe</code> on (potentially a subset of)
+    <code class="code">benchmarks</code>;</li>
+<li>output the data; and</li>
+<li>terminate the process.</li>
+</OL>
+
+<p>For more information about the behavior of <code class="code">main</code>, compile it into an
+    executable and invoke the executable with <code class="code">--help</code>.</p>
+</div>
+</div>
+
+<pre><span id="VALmain_ext"><span class="keyword">val</span> main_ext</span> : <code class="type">?probe:<a href="Unmark.Measurement.Probe.html#TYPEprobe">Unmark.Measurement.Probe.probe</a> -><br>       ?min_t:float -><br>       ?min_s:int -><br>       ?def_filter:<a href="Unmark.Benchmarks.html#TYPEquery">Unmark.Benchmarks.query</a> -><br>       arg:'a Cmdliner.Term.t -> string -> ('a -> <a href="Unmark.html#TYPEbench">Unmark.bench</a> list) -> unit</code></pre><div class="info ">
+<div class="info-desc">
+<p>Entry point with a hook for command-line arguments.</p>
+
+<p><code class="code">main_p&nbsp;~arg&nbsp;suite&nbsp;f</code> is <code class="code">main&nbsp;suite&nbsp;(f&nbsp;p)</code>, where <code class="code">p</code> is obtained by
+    evaluating the <code class="code"><span class="constructor">Cmdliner</span></code> term <code class="code">arg</code>.</p>
+</div>
+</div>
+
+<pre><span id="VALprobe"><span class="keyword">val</span> probe</span> : <code class="type"><a href="Unmark.Measurement.Probe.html#TYPEprobe">Unmark.Measurement.Probe.probe</a></code></pre><div class="info ">
+<div class="info-desc">
+<p>Default measurement probe.</p>
+</div>
+</div>
+<h2 id="1_Exampleusage">Example usage</h2>
+<p><code class="code">shebang.ml</code>:</p>
+<pre class="codepre"><code class="code"><span class="keyword">let</span> f () = ...
+<span class="keyword">let</span> o () = ...
+<span class="keyword">let</span> () = <span class="constructor">Unmark_cli</span>.main <span class="string">"shebang"</span> <span class="constructor">Unmark</span>.[bench <span class="string">"eff"</span> f; bench <span class="string">"ohh"</span> o]
+</code></pre>
+<pre class="codepre"><code class="code">$ ocamlfind ocamlopt -linkpkg -package unmark.cli shebang.ml -o shebang
+$ ./shebang --help
+</code></pre></body></html>

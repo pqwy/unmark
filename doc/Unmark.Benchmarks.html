@@ -1,0 +1,199 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<link rel="stylesheet" href="style.css" type="text/css">
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="Start" href="index.html">
+<link rel="previous" href="Unmark.Measurement.html">
+<link rel="next" href="Unmark.Estimate.html">
+<link rel="Up" href="Unmark.html">
+<link title="Index of types" rel=Appendix href="index_types.html">
+<link title="Index of values" rel=Appendix href="index_values.html">
+<link title="Index of modules" rel=Appendix href="index_modules.html">
+<link title="Unmark" rel="Chapter" href="Unmark.html">
+<link title="Unmark_cli" rel="Chapter" href="Unmark_cli.html"><link title="Filtering" rel="Section" href="#filtering">
+<link title="Running" rel="Section" href="#1_Running">
+<link title="Inspection" rel="Section" href="#1_Inspection">
+<title>Unmark.Benchmarks</title>
+</head>
+<body>
+<div class="navbar"><a class="pre" href="Unmark.Measurement.html" title="Unmark.Measurement">Previous</a>
+&nbsp;<a class="up" href="Unmark.html" title="Unmark">Up</a>
+&nbsp;<a class="post" href="Unmark.Estimate.html" title="Unmark.Estimate">Next</a>
+</div>
+<h1>Module <a href="type_Unmark.Benchmarks.html">Unmark.Benchmarks</a></h1>
+
+<pre><span id="MODULEBenchmarks"><span class="keyword">module</span> Benchmarks</span>: <code class="code"><span class="keyword">sig</span></code> <a href="Unmark.Benchmarks.html">..</a> <code class="code"><span class="keyword">end</span></code></pre><div class="info module top">
+<div class="info-desc">
+<p>Running and elimination of whole benchmarks suites.</p>
+</div>
+</div>
+<hr width="100%">
+
+<pre><span id="TYPEname"><span class="keyword">type</span> <code class="type"></code>name</span> = <code class="type">string list * string</code> </pre>
+<div class="info ">
+<div class="info-desc">
+<p>Fully qualified names.</p>
+</div>
+</div>
+
+<h2 id="filtering">Filtering</h2>
+<pre><span id="TYPEquery"><span class="keyword">type</span> <code class="type"></code>query</span> = <code class="type">string list</code> </pre>
+
+<p>Operations over benchmark suites support filtering, to restrict them to a
+      subset of benchmarks.</p>
+
+<p>Queries contain query components. Components are strings with syntax
+      <code class="code">[<span class="constructor">NAME1</span>[/<span class="constructor">NAME2</span>...]]</code>.</p>
+
+<p>Each benchmark is located in a tree of groups, and can be assigned a
+      <a href="Unmark.Benchmarks.html#TYPEname">qualified name</a> like <code class="code">group1/group2/bench</code>. A query component is
+      the full path to a benchmark or a group. As a special case, an empty
+      <code class="code"><span class="constructor">NAME</span></code> between slashes selects all groups at that level.</p>
+
+<p>For example:</p>
+
+<ul>
+<li><code class="code"><span class="string">"a"</span></code> selects the top-level benchmark named <code class="code">a</code>, or all the benchmarks
+      in the top-evel group <code class="code">a</code>.</li>
+<li><code class="code"><span class="string">"a/b/x"</span></code> selects the benchmark (or group) named <code class="code">x</code> in group <code class="code">b</code> in
+      group <code class="code">a</code>.</li>
+<li><code class="code"><span class="string">"a//x"</span></code> selects the benchmark (or group) named <code class="code">x</code> in any second-level
+      subgroup of <code class="code">a</code>.</li>
+<li><code class="code"><span class="string">""</span></code> selects everything.</li>
+</ul>
+
+<p>Query selects all benchmarks selected by any of its components. Empty
+      lists selects everything.</p>
+
+<pre><span id="VALmatches"><span class="keyword">val</span> matches</span> : <code class="type">?group:bool -> q:<a href="Unmark.Benchmarks.html#TYPEquery">query</a> -> <a href="Unmark.Benchmarks.html#TYPEname">name</a> -> bool</code></pre><div class="info ">
+<div class="info-desc">
+<p><code class="code">matches&nbsp;?group&nbsp;~g&nbsp;name</code> checks if <code class="code">name</code> matches the query <code class="code">q</code> in the
+      sense above.</p>
+
+<p>When <code class="code">group</code> is <code class="code"><span class="keyword">true</span></code>, the match is strictly more permissive: <code class="code">name</code> is
+      also selected by query components more specific than it, making target's
+      parent groups selectable. Default <code class="code"><span class="keyword">false</span></code>.</p>
+</div>
+</div>
+<h2 id="1_Running">Running</h2>
+<pre><code><span id="TYPErun"><span class="keyword">type</span> <code class="type"></code>run</span> = {</code></pre><table class="typetable">
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTrun.suite">suite</span>&nbsp;: <code class="type">string</code>;</code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" ><div class="info ">
+<div class="info-desc">
+<p>Name of the benchmark suite.</p>
+</div>
+</div>
+</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTrun.note">note</span>&nbsp;: <code class="type">string</code>;</code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" ><div class="info ">
+<div class="info-desc">
+<p>A note for this run.</p>
+</div>
+</div>
+</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTrun.time">time</span>&nbsp;: <code class="type">float</code>;</code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" ><div class="info ">
+<div class="info-desc">
+<p>Run timestamp, UNIX time.</p>
+</div>
+</div>
+</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTrun.counters">counters</span>&nbsp;: <code class="type">(string * string option) list</code>;</code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" ><div class="info ">
+<div class="info-desc">
+<p>Counters and their units.</p>
+</div>
+</div>
+</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTrun.benchmarks">benchmarks</span>&nbsp;: <code class="type">(<a href="Unmark.Benchmarks.html#TYPEname">name</a> * <a href="Unmark.Attr.html#TYPEt">Unmark.Attr.t</a> * <a href="Unmark.Measurement.html#TYPEsample">Unmark.Measurement.sample</a> list)<br>       list</code>;</code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" ><div class="info ">
+<div class="info-desc">
+<p>Benchmark names, attributes, and their sample series.</p>
+</div>
+</div>
+</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr></table>
+}
+
+<div class="info ">
+<div class="info-desc">
+<p>Raw results of running a benchmark suite.</p>
+</div>
+</div>
+
+
+<pre><span id="VALrun"><span class="keyword">val</span> run</span> : <code class="type">?probe:<a href="Unmark.Measurement.Probe.html#TYPEprobe">Unmark.Measurement.Probe.probe</a> -><br>       ?min_t:float -><br>       ?min_s:int -><br>       ?q:<a href="Unmark.Benchmarks.html#TYPEquery">query</a> -><br>       ?note:string -> suite:string -> <a href="Unmark.html#TYPEbench">Unmark.bench</a> list -> <a href="Unmark.Benchmarks.html#TYPErun">run</a></code></pre><div class="info ">
+<div class="info-desc">
+<p><code class="code">run&nbsp;?probe&nbsp;?min_t&nbsp;?min_s&nbsp;?q&nbsp;?note&nbsp;~suite&nbsp;benchmarks</code> runs the benchmark
+      suite <code class="code">benchmarks</code> named <code class="code">suite</code>. Individual benchmarks are passed to
+      <a href="Unmark.Measurement.html#VALmeasure"><code class="code">measure</code></a>.</p>
+
+<p><code class="code">q</code> - <a href="Unmark.Benchmarks.html#filtering">Filtering</a> query.</p>
+
+<p><code class="code">note</code> - Text snippet attached to this particular run.</p>
+
+<p><code class="code">probe</code>, <code class="code">min_t</code>, <code class="code">min_s</code> - Passed to <a href="Unmark.Measurement.html#VALmeasure"><code class="code"><span class="constructor">Unmark</span>.<span class="constructor">Measurement</span>.measure</code></a>.</p>
+</div>
+</div>
+
+<pre><span id="MODULERun"><span class="keyword">module</span> <a href="Unmark.Benchmarks.Run.html">Run</a></span>: <code class="code"><span class="keyword">sig</span></code> <a href="Unmark.Benchmarks.Run.html">..</a> <code class="code"><span class="keyword">end</span></code></pre><div class="info">
+<p>Operations over <a href="Unmark.Benchmarks.html#VALrun">runs</a>.</p>
+
+</div>
+<h2 id="1_Inspection">Inspection</h2>
+<pre><span id="TYPEthunk"><span class="keyword">type</span> <code class="type">'a</code> thunk</span> </pre>
+<div class="info ">
+<div class="info-desc">
+<p>Bracketed thunks.</p>
+
+<p>An <code class="code"><span class="keywordsign">'</span>a&nbsp;thunk</code> is <code class="code">unit&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="keywordsign">'</span>a</code> which uses additional external resources.
+      Thunks are internalization of <a href="Unmark.html#VALgroup_f"><code class="code"><span class="constructor">Unmark</span>.group_f</code></a>.</p>
+</div>
+</div>
+
+
+<pre><span id="VALfold"><span class="keyword">val</span> fold</span> : <code class="type">bench:(<a href="Unmark.Benchmarks.html#TYPEname">name</a> -><br>              <a href="Unmark.Attr.html#TYPEt">Unmark.Attr.t</a> -> <a href="Unmark.Measurement.html#TYPErunnable">Unmark.Measurement.runnable</a> -> 'r) -><br>       group:(<a href="Unmark.Benchmarks.html#TYPEname">name</a> -> 'r list <a href="Unmark.Benchmarks.html#TYPEthunk">thunk</a> -> 'r) -><br>       suite:('r list -> 'p) -> <a href="Unmark.html#TYPEbench">Unmark.bench</a> list -> 'p</code></pre><div class="info ">
+<div class="info-desc">
+<p>Benchmark eliminator.</p>
+</div>
+</div>
+
+<pre><span id="VALeval"><span class="keyword">val</span> eval</span> : <code class="type">'a <a href="Unmark.Benchmarks.html#TYPEthunk">thunk</a> -> 'a</code></pre><div class="info ">
+<div class="info-desc">
+<p><code class="code">eval&nbsp;t</code> runs <code class="code">t</code>. This can cause acquisition and release of associated
+      resources.</p>
+</div>
+</div>
+
+<pre><span id="VAL(%%)"><span class="keyword">val</span> (%%)</span> : <code class="type">('a -> 'b) -> 'a <a href="Unmark.Benchmarks.html#TYPEthunk">thunk</a> -> 'b <a href="Unmark.Benchmarks.html#TYPEthunk">thunk</a></code></pre><div class="info ">
+<div class="info-desc">
+<p><code class="code">f&nbsp;%%&nbsp;t</code> extends <code class="code">t</code> by applying <code class="code">f</code> within the resource bracket.</p>
+</div>
+</div>
+</body></html>

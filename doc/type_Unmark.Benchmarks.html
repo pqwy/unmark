@@ -1,0 +1,55 @@
+<html><head>
+<link rel="stylesheet" href="style.css" type="text/css">
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="Start" href="index.html">
+<link title="Index of types" rel=Appendix href="index_types.html">
+<link title="Index of values" rel=Appendix href="index_values.html">
+<link title="Index of modules" rel=Appendix href="index_modules.html">
+<link title="Unmark" rel="Chapter" href="Unmark.html">
+<link title="Unmark_cli" rel="Chapter" href="Unmark_cli.html"><title>Unmark.Benchmarks</title>
+</head>
+<body>
+<code class="code"><span class="keyword">sig</span><br>
+&nbsp;&nbsp;<span class="keyword">type</span>&nbsp;name&nbsp;=&nbsp;string&nbsp;list&nbsp;*&nbsp;string<br>
+&nbsp;&nbsp;<span class="keyword">type</span>&nbsp;query&nbsp;=&nbsp;string&nbsp;list<br>
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;matches&nbsp;:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;?group:bool&nbsp;<span class="keywordsign">-&gt;</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;q:<span class="constructor">Unmark</span>.<span class="constructor">Benchmarks</span>.query&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Unmark</span>.<span class="constructor">Benchmarks</span>.name&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;bool<br>
+&nbsp;&nbsp;<span class="keyword">type</span>&nbsp;run&nbsp;=&nbsp;{<br>
+&nbsp;&nbsp;&nbsp;&nbsp;suite&nbsp;:&nbsp;string;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;note&nbsp;:&nbsp;string;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;time&nbsp;:&nbsp;float;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;counters&nbsp;:&nbsp;(string&nbsp;*&nbsp;string&nbsp;option)&nbsp;list;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;benchmarks&nbsp;:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="constructor">Unmark</span>.<span class="constructor">Benchmarks</span>.name&nbsp;*&nbsp;<span class="constructor">Unmark</span>.<span class="constructor">Attr</span>.t&nbsp;*<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Unmark</span>.<span class="constructor">Measurement</span>.sample&nbsp;list)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;list;<br>
+&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;run&nbsp;:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;?probe:<span class="constructor">Unmark</span>.<span class="constructor">Measurement</span>.<span class="constructor">Probe</span>.probe&nbsp;<span class="keywordsign">-&gt;</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;?min_t:float&nbsp;<span class="keywordsign">-&gt;</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;?min_s:int&nbsp;<span class="keywordsign">-&gt;</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;?q:<span class="constructor">Unmark</span>.<span class="constructor">Benchmarks</span>.query&nbsp;<span class="keywordsign">-&gt;</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;?note:string&nbsp;<span class="keywordsign">-&gt;</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;suite:string&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Unmark</span>.bench&nbsp;list&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Unmark</span>.<span class="constructor">Benchmarks</span>.run<br>
+&nbsp;&nbsp;<span class="keyword">module</span>&nbsp;<span class="constructor">Run</span>&nbsp;:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">sig</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;filter&nbsp;:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;?q:<span class="constructor">Unmark</span>.<span class="constructor">Benchmarks</span>.query&nbsp;<span class="keywordsign">-&gt;</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Unmark</span>.<span class="constructor">Benchmarks</span>.run&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Unmark</span>.<span class="constructor">Benchmarks</span>.run<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;add_json&nbsp;:&nbsp;<span class="constructor">Stdlib</span>.<span class="constructor">Buffer</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Unmark</span>.<span class="constructor">Benchmarks</span>.run&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;unit<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;of_json&nbsp;:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;string&nbsp;<span class="keywordsign">-&gt;</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="constructor">Unmark</span>.<span class="constructor">Benchmarks</span>.run&nbsp;*&nbsp;string,&nbsp;[&nbsp;<span class="keywordsign">`</span><span class="constructor">Msg</span>&nbsp;<span class="keyword">of</span>&nbsp;string&nbsp;])&nbsp;<span class="constructor">Stdlib</span>.result<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">end</span><br>
+&nbsp;&nbsp;<span class="keyword">type</span>&nbsp;<span class="keywordsign">'</span>a&nbsp;thunk<br>
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;fold&nbsp;:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;bench:(<span class="constructor">Unmark</span>.<span class="constructor">Benchmarks</span>.name&nbsp;<span class="keywordsign">-&gt;</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Unmark</span>.<span class="constructor">Attr</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Unmark</span>.<span class="constructor">Measurement</span>.runnable&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="keywordsign">'</span>r)&nbsp;<span class="keywordsign">-&gt;</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;group:(<span class="constructor">Unmark</span>.<span class="constructor">Benchmarks</span>.name&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="keywordsign">'</span>r&nbsp;list&nbsp;<span class="constructor">Unmark</span>.<span class="constructor">Benchmarks</span>.thunk&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="keywordsign">'</span>r)&nbsp;<span class="keywordsign">-&gt;</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;suite:(<span class="keywordsign">'</span>r&nbsp;list&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="keywordsign">'</span>p)&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Unmark</span>.bench&nbsp;list&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="keywordsign">'</span>p<br>
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;eval&nbsp;:&nbsp;<span class="keywordsign">'</span>a&nbsp;<span class="constructor">Unmark</span>.<span class="constructor">Benchmarks</span>.thunk&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="keywordsign">'</span>a<br>
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;(&nbsp;%%&nbsp;)&nbsp;:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(<span class="keywordsign">'</span>a&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="keywordsign">'</span>b)&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="keywordsign">'</span>a&nbsp;<span class="constructor">Unmark</span>.<span class="constructor">Benchmarks</span>.thunk&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="keywordsign">'</span>b&nbsp;<span class="constructor">Unmark</span>.<span class="constructor">Benchmarks</span>.thunk<br>
+<span class="keyword">end</span></code></body></html>

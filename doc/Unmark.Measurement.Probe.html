@@ -1,0 +1,136 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<link rel="stylesheet" href="style.css" type="text/css">
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="Start" href="index.html">
+<link rel="Up" href="Unmark.Measurement.html">
+<link title="Index of types" rel=Appendix href="index_types.html">
+<link title="Index of values" rel=Appendix href="index_values.html">
+<link title="Index of modules" rel=Appendix href="index_modules.html">
+<link title="Unmark" rel="Chapter" href="Unmark.html">
+<link title="Unmark_cli" rel="Chapter" href="Unmark_cli.html"><link title="Counters" rel="Section" href="#1_Counters">
+<link title="Probes" rel="Section" href="#1_Probes">
+<link title="Predefined probes" rel="Section" href="#1_Predefinedprobes">
+<title>Unmark.Measurement.Probe</title>
+</head>
+<body>
+<div class="navbar">&nbsp;<a class="up" href="Unmark.Measurement.html" title="Unmark.Measurement">Up</a>
+&nbsp;</div>
+<h1>Module <a href="type_Unmark.Measurement.Probe.html">Unmark.Measurement.Probe</a></h1>
+
+<pre><span id="MODULEProbe"><span class="keyword">module</span> Probe</span>: <code class="code"><span class="keyword">sig</span></code> <a href="Unmark.Measurement.Probe.html">..</a> <code class="code"><span class="keyword">end</span></code></pre><div class="info module top">
+<div class="info-desc">
+<p>Probe construction and manipulation.</p>
+</div>
+</div>
+<hr width="100%">
+<h2 id="1_Counters">Counters</h2>
+<pre><span id="TYPEcounter"><span class="keyword">type</span> <code class="type"></code>counter</span> </pre>
+<div class="info ">
+<div class="info-desc">
+<p>Individual measured quantity.</p>
+</div>
+</div>
+
+
+<pre><span id="VALctr"><span class="keyword">val</span> ctr</span> : <code class="type">?unit:string -> ?desc:string -> string -> <a href="Unmark.Measurement.Probe.html#TYPEcounter">counter</a></code></pre><div class="info ">
+<div class="info-desc">
+<p><code class="code">ctr&nbsp;?unit&nbsp;?desc&nbsp;name</code> is a description of counter named <code class="code">name</code>.</p>
+
+<p><code class="code">unit</code> is the counter's measurement unit. When absent, a simple count is
+        assumed.</p>
+
+<p><code class="code">desc</code> is a human-readable description.</p>
+</div>
+</div>
+
+<pre><span id="VALname"><span class="keyword">val</span> name</span> : <code class="type"><a href="Unmark.Measurement.Probe.html#TYPEcounter">counter</a> -> string</code></pre>
+<pre><span id="VALdesc"><span class="keyword">val</span> desc</span> : <code class="type"><a href="Unmark.Measurement.Probe.html#TYPEcounter">counter</a> -> string</code></pre>
+<pre><span id="VALunit"><span class="keyword">val</span> unit</span> : <code class="type"><a href="Unmark.Measurement.Probe.html#TYPEcounter">counter</a> -> string option</code></pre>
+<pre><span id="VALpp_ctr"><span class="keyword">val</span> pp_ctr</span> : <code class="type"><a href="Unmark.Measurement.Probe.html#TYPEcounter">counter</a> <a href="Unmark.html#TYPEfmt">Unmark.fmt</a></code></pre><div class="info ">
+<div class="info-desc">
+<p><code class="code">pp_ctr&nbsp;ppf&nbsp;c</code> pretty-prints <code class="code">c</code> on <code class="code">ppf</code>.</p>
+</div>
+</div>
+<h2 id="1_Probes">Probes</h2>
+<pre><span id="TYPEprobe"><span class="keyword">type</span> <code class="type"></code>probe</span> </pre>
+<div class="info ">
+<div class="info-desc">
+<p>Probes perform the actual measurements, producing a set of
+        <a href="Unmark.Measurement.Probe.html#TYPEcounter">counters</a>.</p>
+</div>
+</div>
+
+
+<pre><span id="VALprobe"><span class="keyword">val</span> probe</span> : <code class="type">counters:<a href="Unmark.Measurement.Probe.html#TYPEcounter">counter</a> list -><br>       (float array -> int -> unit) -> <a href="Unmark.Measurement.Probe.html#TYPEprobe">probe</a></code></pre><div class="info ">
+<div class="info-desc">
+<p><code class="code">probe&nbsp;~counters&nbsp;f</code> is a probe <code class="code">p</code> that collects counters <code class="code">counters</code>
+        using the function <code class="code">f</code>.</p>
+
+<p><code class="code">f</code> is invoked as <code class="code">f&nbsp;arr&nbsp;i</code> and must write the values of individual
+        counters into <code class="code">arr.(i)&nbsp;..&nbsp;arr.(i&nbsp;+&nbsp;length&nbsp;counters&nbsp;-&nbsp;1)</code>.</p>
+
+<p><code class="code">counters</code> declares both the number and the order of counters that <code class="code">p</code>
+        measures.</p>
+</div>
+</div>
+
+<pre><span id="VALnothing"><span class="keyword">val</span> nothing</span> : <code class="type"><a href="Unmark.Measurement.Probe.html#TYPEprobe">probe</a></code></pre><div class="info ">
+<div class="info-desc">
+<p><code class="code">nothing</code> is the probe that measures nothing.</p>
+</div>
+</div>
+
+<pre><span id="VAL(++)"><span class="keyword">val</span> (++)</span> : <code class="type"><a href="Unmark.Measurement.Probe.html#TYPEprobe">probe</a> -><br>       <a href="Unmark.Measurement.Probe.html#TYPEprobe">probe</a> -> <a href="Unmark.Measurement.Probe.html#TYPEprobe">probe</a></code></pre><div class="info ">
+<div class="info-desc">
+<p><code class="code">p1&nbsp;++&nbsp;p2</code> the probe that measures both the counters in <code class="code">p1</code> and
+        <code class="code">p2</code>.</p>
+</div>
+</div>
+
+<pre><span id="VALcounters"><span class="keyword">val</span> counters</span> : <code class="type"><a href="Unmark.Measurement.Probe.html#TYPEprobe">probe</a> -> <a href="Unmark.Measurement.Probe.html#TYPEcounter">counter</a> list</code></pre><div class="info ">
+<div class="info-desc">
+<p><code class="code">counters&nbsp;p</code> are the counters that <code class="code">p</code> measures.</p>
+</div>
+</div>
+
+<pre><span id="VALpp"><span class="keyword">val</span> pp</span> : <code class="type"><a href="Unmark.Measurement.Probe.html#TYPEprobe">probe</a> <a href="Unmark.html#TYPEfmt">Unmark.fmt</a></code></pre><div class="info ">
+<div class="info-desc">
+<p><code class="code">pp&nbsp;ppf&nbsp;p</code> pretty-prints <code class="code">p</code> on <code class="code">ppf</code>.</p>
+</div>
+</div>
+<h2 id="1_Predefinedprobes">Predefined probes</h2>
+<pre><span id="VALgc_q_stat"><span class="keyword">val</span> gc_q_stat</span> : <code class="type"><a href="Unmark.Measurement.Probe.html#TYPEprobe">probe</a></code></pre><div class="info ">
+<div class="info-desc">
+<p>A probe for the GC subsystem, using <code class="code"><span class="constructor">Gc</span>.quick_stat</code>.</p>
+
+<p>Counters:</p>
+<ul>
+<li><code class="code">min</code> - words allocated on the minor heap (<code class="code"><span class="constructor">Gc</span>.minor_words</code>);</li>
+<li><code class="code">prom</code> - words promoted to the major heap (<code class="code"><span class="constructor">Gc</span>.promoted_words</code>);</li>
+<li><code class="code">maj</code> - words allocated directly on the major heap
+        (<code class="code"><span class="constructor">Gc</span>.major_words&nbsp;-&nbsp;<span class="constructor">Gc</span>.promoted_words</code>);</li>
+<li><code class="code">gc_min</code> - number of minor collections (<code class="code"><span class="constructor">Gc</span>.minor_collections</code>); and</li>
+<li><code class="code">gc_maj</code> - number of major collections (<code class="code"><span class="constructor">Gc</span>.major_collections</code>).</li>
+</ul>
+</div>
+</div>
+
+<pre><span id="VALgc_counters"><span class="keyword">val</span> gc_counters</span> : <code class="type"><a href="Unmark.Measurement.Probe.html#TYPEprobe">probe</a></code></pre><div class="info ">
+<div class="info-desc">
+<p>A probe for the GC subsystem, using <code class="code"><span class="constructor">Gc</span>.counters</code>.</p>
+
+<p>Subset of <a href="Unmark.Measurement.Probe.html#VALgc_q_stat"><code class="code">gc_q_stat</code></a>.</p>
+</div>
+</div>
+
+<pre><span id="VALrdtsc"><span class="keyword">val</span> rdtsc</span> : <code class="type"><a href="Unmark.Measurement.Probe.html#TYPEprobe">probe</a></code></pre><div class="info ">
+<div class="info-desc">
+<p>Reads the timestamp counter, using x86 RDTSC instruction.</p>
+
+<p>Produces the counter <code class="code">tsc</code>.</p>
+</div>
+</div>
+</body></html>

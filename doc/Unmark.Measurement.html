@@ -1,0 +1,111 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<link rel="stylesheet" href="style.css" type="text/css">
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="Start" href="index.html">
+<link rel="previous" href="Unmark.Attr.html">
+<link rel="next" href="Unmark.Benchmarks.html">
+<link rel="Up" href="Unmark.html">
+<link title="Index of types" rel=Appendix href="index_types.html">
+<link title="Index of values" rel=Appendix href="index_values.html">
+<link title="Index of modules" rel=Appendix href="index_modules.html">
+<link title="Unmark" rel="Chapter" href="Unmark.html">
+<link title="Unmark_cli" rel="Chapter" href="Unmark_cli.html"><title>Unmark.Measurement</title>
+</head>
+<body>
+<div class="navbar"><a class="pre" href="Unmark.Attr.html" title="Unmark.Attr">Previous</a>
+&nbsp;<a class="up" href="Unmark.html" title="Unmark">Up</a>
+&nbsp;<a class="post" href="Unmark.Benchmarks.html" title="Unmark.Benchmarks">Next</a>
+</div>
+<h1>Module <a href="type_Unmark.Measurement.html">Unmark.Measurement</a></h1>
+
+<pre><span id="MODULEMeasurement"><span class="keyword">module</span> Measurement</span>: <code class="code"><span class="keyword">sig</span></code> <a href="Unmark.Measurement.html">..</a> <code class="code"><span class="keyword">end</span></code></pre><div class="info module top">
+<div class="info-desc">
+<p>Low-level measurement machinery.</p>
+</div>
+</div>
+<hr width="100%">
+<p>A <a href="Unmark.Measurement.Probe.html#VALprobe"><code class="code">probe</code></a> provides a set of measurements, called
+      <a href="Unmark.Measurement.Probe.html#TYPEcounter">counters</a>. These are assumed to be global, monotonically
+      increasing, and (ideally) affected by running code.</p>
+
+<p>A single measurement is <a href="Unmark.Measurement.html#VALsample">performed</a> by invoking a probe to get
+      the values of counters, running the target piece of code a certain number
+      of times, getting the counters again, and reporting the difference.</p>
+
+<p>The <a href="Unmark.Measurement.html#VALmeasure">measurement process</a> collects a series of measurements
+      while varying the number of times the target code is ran.</p>
+
+<pre><span id="MODULEProbe"><span class="keyword">module</span> <a href="Unmark.Measurement.Probe.html">Probe</a></span>: <code class="code"><span class="keyword">sig</span></code> <a href="Unmark.Measurement.Probe.html">..</a> <code class="code"><span class="keyword">end</span></code></pre><div class="info">
+<p>Probe construction and manipulation.</p>
+
+</div>
+
+<pre><span id="TYPErunnable"><span class="keyword">type</span> <code class="type"></code>runnable</span> </pre>
+<div class="info ">
+<div class="info-desc">
+<p><code class="code">runnable</code> is the object of measurement.</p>
+</div>
+</div>
+
+
+<pre><span id="VALrunnable"><span class="keyword">val</span> runnable</span> : <code class="type">(unit -> 'a) -> <a href="Unmark.Measurement.html#TYPErunnable">runnable</a></code></pre>
+<pre><span id="TYPEsample"><span class="keyword">type</span> <code class="type"></code>sample</span> = <code class="type">float array</code> </pre>
+<div class="info ">
+<div class="info-desc">
+<p>An array of <a href="Unmark.Measurement.Probe.html#TYPEcounter">counter</a> values.</p>
+</div>
+</div>
+
+
+<pre><span id="VALsample"><span class="keyword">val</span> sample</span> : <code class="type">probe:<a href="Unmark.Measurement.Probe.html#TYPEprobe">Probe.probe</a> -><br>       iters:int -> <a href="Unmark.Measurement.html#TYPErunnable">runnable</a> -> <a href="Unmark.Measurement.html#TYPEsample">sample</a></code></pre><div class="info ">
+<div class="info-desc">
+<p><code class="code">sample&nbsp;~probe&nbsp;~iters&nbsp;r</code> performs a single measurement of <code class="code">r</code> and returns
+      a sample <code class="code">s</code>.</p>
+
+<p>It runs <code class="code">r</code> in a tight loop <code class="code">iters</code> times, returning the <code class="code">probe</code>'s
+      counters' difference before and after the run.</p>
+
+<p><code class="code">s</code> has <a href="Unmark.Measurement.html#VALcore_counters">core counters</a> in the initial positions, followed
+      by the <code class="code">probe</code>'s counters as given by <code class="code"><span class="constructor">Probe</span>.counters&nbsp;probe</code>. In
+      particular, <code class="code">s.(0)&nbsp;=&nbsp;iters</code>.</p>
+</div>
+</div>
+
+<pre><span id="VALmeasure"><span class="keyword">val</span> measure</span> : <code class="type">?probe:<a href="Unmark.Measurement.Probe.html#TYPEprobe">Probe.probe</a> -><br>       ?min_t:float -><br>       ?min_s:int -> <a href="Unmark.Measurement.html#TYPErunnable">runnable</a> -> <a href="Unmark.Measurement.html#TYPEsample">sample</a> list</code></pre><div class="info ">
+<div class="info-desc">
+<p><code class="code">measure&nbsp;~probe&nbsp;~min_t&nbsp;~min_s&nbsp;r</code> performs a series of measurements of <code class="code">r</code>.</p>
+
+<p>Individual measurements are obtained by invoking <a href="Unmark.Measurement.html#VALsample"><code class="code">sample</code></a> with
+      varying <code class="code">iters</code>, until both the minimal number of samples are collected,
+      and the minimal measurement time elapses.</p>
+
+<p><code class="code">probe</code> is the <a href="Unmark.Measurement.Probe.html#VALprobe"><code class="code">probe</code></a> used to produce measurements.
+      Default <a href="Unmark.Measurement.Probe.html#VALnothing"><code class="code">nothing</code></a>.</p>
+
+<p><code class="code">min_t</code> is the minimal measurement time in seconds. Default <code class="code">1</code>.</p>
+
+<p><code class="code">min_s</code> is the minimal number of samples to collect. Default <code class="code">10</code>.</p>
+
+<p>The exact sampling strategy is not part of the API and could change.
+      Currently, it's an exponential function with slow start, approximating
+      <code class="code">iters&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;iters^1.05</code>.</p>
+</div>
+</div>
+
+<pre><span id="VALwarmup"><span class="keyword">val</span> warmup</span> : <code class="type">?seconds:float -> unit -> unit</code></pre><div class="info ">
+<div class="info-desc">
+<p><code class="code">warmup&nbsp;~seconds</code> busy-loops the CPU to force it into full-power mode.</p>
+
+<p><code class="code">seconds</code> is the warmup period. Default <code class="code">1</code>.</p>
+</div>
+</div>
+
+<pre><span id="VALcore_counters"><span class="keyword">val</span> core_counters</span> : <code class="type"><a href="Unmark.Measurement.Probe.html#TYPEcounter">Probe.counter</a> list</code></pre><div class="info ">
+<div class="info-desc">
+<p>Wired-in counters that are always collected.</p>
+</div>
+</div>
+</body></html>

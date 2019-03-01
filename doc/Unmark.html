@@ -1,0 +1,115 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<link rel="stylesheet" href="style.css" type="text/css">
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="Start" href="index.html">
+<link rel="next" href="Unmark_cli.html">
+<link rel="Up" href="index.html">
+<link title="Index of types" rel=Appendix href="index_types.html">
+<link title="Index of values" rel=Appendix href="index_values.html">
+<link title="Index of modules" rel=Appendix href="index_modules.html">
+<link title="Unmark" rel="Chapter" href="Unmark.html">
+<link title="Unmark_cli" rel="Chapter" href="Unmark_cli.html"><link title="Creating benchmarks" rel="Section" href="#1_Creatingbenchmarks">
+<link title="Detailed interface" rel="Section" href="#1_Detailedinterface">
+<title>Unmark</title>
+</head>
+<body>
+<div class="navbar">&nbsp;<a class="up" href="index.html" title="Index">Up</a>
+&nbsp;<a class="post" href="Unmark_cli.html" title="Unmark_cli">Next</a>
+</div>
+<h1>Module <a href="type_Unmark.html">Unmark</a></h1>
+
+<pre><span id="MODULEUnmark"><span class="keyword">module</span> Unmark</span>: <code class="code"><span class="keyword">sig</span></code> <a href="Unmark.html">..</a> <code class="code"><span class="keyword">end</span></code></pre><div class="info module top">
+<div class="info-desc">
+<p>Painless micro-benchmarks.</p>
+
+<p><em>d759a53 — <a href="https://github.com/pqwy/unmark ">homepage</a></em></p>
+</div>
+</div>
+<hr width="100%">
+
+<pre><span id="TYPEfmt"><span class="keyword">type</span> <code class="type">'a</code> fmt</span> = <code class="type">Stdlib.Format.formatter -> 'a -> unit</code> </pre>
+
+<h2 id="1_Creatingbenchmarks">Creating benchmarks</h2>
+<p>Benchmark construction is sufficient for most uses of the library.
+    For a simple way to run the benchmarks, see <a href="Unmark_cli.html"><code class="code"><span class="constructor">Unmark_cli</span></code></a>.</p>
+
+<pre><span id="TYPEbench"><span class="keyword">type</span> <code class="type"></code>bench</span> </pre>
+<div class="info ">
+<div class="info-desc">
+<p>A labelled tree of code.</p>
+
+<p><a href="Unmark.html#VALbench">Leaves</a> contain annotated functions.
+    <a href="Unmark.html#VALgroup">Inner nodes</a> are purely organisational.</p>
+</div>
+</div>
+
+
+<pre><span id="MODULEAttr"><span class="keyword">module</span> <a href="Unmark.Attr.html">Attr</a></span>: <code class="code"><span class="keyword">sig</span></code> <a href="Unmark.Attr.html">..</a> <code class="code"><span class="keyword">end</span></code></pre><div class="info">
+<p>Benchmark metadata.</p>
+
+</div>
+
+<pre><span id="VALbench"><span class="keyword">val</span> bench</span> : <code class="type">?attr:<a href="Unmark.Attr.html#TYPEt">Attr.t</a> -> string -> (unit -> 'a) -> <a href="Unmark.html#TYPEbench">bench</a></code></pre><div class="info ">
+<div class="info-desc">
+<p><code class="code">bench&nbsp;?attr&nbsp;name&nbsp;f</code> is a named benchmark measuring <code class="code">f</code>.</p>
+
+<p><code class="code">attr</code> are optional <a href="Unmark.Attr.html#TYPEt">attributes</a>. Attributes serve to attach
+    user-defined metadata to the benchmark.</p>
+
+<p><b>Note.</b> Occurrences of <code class="code"><span class="string">'/'</span></code> in <code class="code">name</code> are removed in an unspecified way.</p>
+</div>
+</div>
+
+<pre><span id="VALgroup"><span class="keyword">val</span> group</span> : <code class="type">string -> <a href="Unmark.html#TYPEbench">bench</a> list -> <a href="Unmark.html#TYPEbench">bench</a></code></pre><div class="info ">
+<div class="info-desc">
+<p><code class="code">group&nbsp;name&nbsp;benchmarks</code> is a named group of benchmarks.</p>
+
+<p>Root nodes of <code class="code">benchmarks</code> are renamed to avoid name clashes.</p>
+
+<p><code class="code">name</code> behaves like above.</p>
+</div>
+</div>
+
+<pre><span id="VALgroup_f"><span class="keyword">val</span> group_f</span> : <code class="type">init:(unit -> 'a) -><br>       fini:('a -> unit) -> string -> ('a -> <a href="Unmark.html#TYPEbench">bench</a> list) -> <a href="Unmark.html#TYPEbench">bench</a></code></pre><div class="info ">
+<div class="info-desc">
+<p><code class="code">group_f&nbsp;~init&nbsp;~fini&nbsp;name&nbsp;f</code> is a group of benchmarks that depend on
+    a temporarily acquired resource.</p>
+
+<p>This is <code class="code">group&nbsp;name&nbsp;(f&nbsp;(init&nbsp;()))</code>, except <code class="code">init</code> and <code class="code">f</code> are only invoked
+    if the group is <em>visited</em> (e.g. to run the benchmarks), and <code class="code">fini</code> is
+    called on the result of <code class="code">init</code> after the visit.</p>
+
+<p>Apart from acquiring and releasing external resources, <code class="code">init</code>/<code class="code">fini</code> -- or
+    simply constructing stuff in the body of <code class="code">f</code> -- can be used to avoid
+    expensive setup computations if the group is going to be skipped.</p>
+</div>
+</div>
+<h2 id="1_Detailedinterface">Detailed interface</h2>
+<p>The rest of the API is of interest for changing what is being measured,
+    creating alternative benchmark runners, directly inspecting benchmarks, or
+    analysing the results.</p>
+
+<pre><span id="VALlog"><span class="keyword">val</span> log</span> : <code class="type">Logs.src</code></pre><div class="info ">
+<div class="info-desc">
+<p>Log source for this module.</p>
+</div>
+</div>
+
+<pre><span id="MODULEMeasurement"><span class="keyword">module</span> <a href="Unmark.Measurement.html">Measurement</a></span>: <code class="code"><span class="keyword">sig</span></code> <a href="Unmark.Measurement.html">..</a> <code class="code"><span class="keyword">end</span></code></pre><div class="info">
+<p>Low-level measurement machinery.</p>
+
+</div>
+
+<pre><span id="MODULEBenchmarks"><span class="keyword">module</span> <a href="Unmark.Benchmarks.html">Benchmarks</a></span>: <code class="code"><span class="keyword">sig</span></code> <a href="Unmark.Benchmarks.html">..</a> <code class="code"><span class="keyword">end</span></code></pre><div class="info">
+<p>Running and elimination of whole benchmarks suites.</p>
+
+</div>
+
+<pre><span id="MODULEEstimate"><span class="keyword">module</span> <a href="Unmark.Estimate.html">Estimate</a></span>: <code class="code"><span class="keyword">sig</span></code> <a href="Unmark.Estimate.html">..</a> <code class="code"><span class="keyword">end</span></code></pre><div class="info">
+<p>Deepest numerology.</p>
+
+</div>
+</body></html>

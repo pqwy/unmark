@@ -1,0 +1,43 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<link rel="stylesheet" href="style.css" type="text/css">
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="Start" href="index.html">
+<link rel="previous" href="Unmark_cli.html">
+<link rel="Up" href="index.html">
+<link title="Index of types" rel=Appendix href="index_types.html">
+<link title="Index of values" rel=Appendix href="index_values.html">
+<link title="Index of modules" rel=Appendix href="index_modules.html">
+<link title="Unmark" rel="Chapter" href="Unmark.html">
+<link title="Unmark_cli" rel="Chapter" href="Unmark_cli.html">
+<link title="Unmark_papi" rel="Chapter" href="Unmark_papi.html"><link title="Usage" rel="Section" href="#1_Usage">
+<title>Unmark_papi</title>
+</head>
+<body>
+<div class="navbar"><a class="pre" href="Unmark_cli.html" title="Unmark_cli">Previous</a>
+&nbsp;<a class="up" href="index.html" title="Index">Up</a>
+&nbsp;</div>
+<h1>Module <a href="type_Unmark_papi.html">Unmark_papi</a></h1>
+
+<pre><span id="MODULEUnmark_papi"><span class="keyword">module</span> Unmark_papi</span>: <code class="code"><span class="keyword">sig</span></code> <a href="Unmark_papi.html">..</a> <code class="code"><span class="keyword">end</span></code></pre><div class="info module top">
+<div class="info-desc">
+<p>Unmark <a href=" https://github.com/pqwy/ocaml-papi">PAPI</a> integration.</p>
+
+<p><em>fd2e7a6 — <a href="https://github.com/pqwy/unmark ">homepage</a></em></p>
+</div>
+</div>
+<hr width="100%">
+
+<pre><span id="VALof_events"><span class="keyword">val</span> of_events</span> : <code class="type">Papi.event list -> <a href="Unmark.Measurement.Probe.html#TYPEprobe">Unmark.Measurement.Probe.probe</a></code></pre><div class="info ">
+<div class="info-desc">
+<p><code class="code">of_events&nbsp;evts</code> is a probe that uses PAPI to count events <code class="code">evts</code>.</p>
+</div>
+</div>
+<h2 id="1_Usage">Usage</h2>
+<p>Measure L1, L2 and L3 cache miss behaviour:</p>
+
+<pre class="codepre"><code class="code"><span class="keyword">let</span> probe = of_events <span class="constructor">Papi</span>.[<span class="constructor">L1_TCM</span>; <span class="constructor">L2_TCM</span>; <span class="constructor">L3_TCM</span>]
+<span class="keyword">let</span> _ = <span class="constructor">Unmark_cli</span>.main <span class="string">"stuff"</span> ~probe [...]
+</code></pre></body></html>

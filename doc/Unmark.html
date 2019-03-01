@@ -14,6 +14,7 @@
 <link title="Unmark_cli" rel="Chapter" href="Unmark_cli.html">
 <link title="Unmark_papi" rel="Chapter" href="Unmark_papi.html"><link title="Creating benchmarks" rel="Section" href="#1_Creatingbenchmarks">
 <link title="Detailed interface" rel="Section" href="#1_Detailedinterface">
+<link title="Examples" rel="Section" href="#examples">
 <title>Unmark</title>
 </head>
 <body>
@@ -26,7 +27,11 @@
 <div class="info-desc">
 <p>Painless micro-benchmarks.</p>
 
-<p><em>fd2e7a6 — <a href="https://github.com/pqwy/unmark ">homepage</a></em></p>
+<p>Theory of operation is TODO.</p>
+
+<p>Examples <a href="Unmark.html#examples">at the end</a>.</p>
+
+<p><em>745d6fa — <a href="https://github.com/pqwy/unmark ">homepage</a></em></p>
 </div>
 </div>
 <hr width="100%">
@@ -113,4 +118,54 @@
 <p>Deepest numerology.</p>
 
 </div>
-</body></html>
+<h2 id="examples">Examples</h2>
+<p>A single benchmark measuring <code class="code">f:&nbsp;unit&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;t</code> for some <code class="code">t</code>:</p>
+
+<pre class="codepre"><code class="code"><span class="keyword">let</span> bm = bench <span class="string">"eff"</span> f
+</code></pre>
+<p>A group of benchmarks:</p>
+
+<pre class="codepre"><code class="code"><span class="keyword">let</span> bm = group <span class="string">"things"</span> [
+  bench <span class="string">"this"</span> f;
+  bench <span class="string">"that"</span> g;
+]
+</code></pre>
+<p>Group nesting:</p>
+
+<pre class="codepre"><code class="code"><span class="keyword">let</span> bm = group <span class="string">"stuff"</span> [
+  group <span class="string">"more"</span> [ bench <span class="string">"x"</span> x ];
+  group <span class="string">"less"</span> [ bench <span class="string">"y"</span> y ];
+]
+</code></pre>
+<p>A group acquiring a resource:</p>
+
+<pre class="codepre"><code class="code"><span class="keyword">let</span> bm path = group_f <span class="string">"files"</span> (<span class="keyword">fun</span> fd <span class="keywordsign">-&gt;</span>
+  [ bench <span class="string">"f1"</span> (<span class="keyword">fun</span> () <span class="keywordsign">-&gt;</span> f1 fd);
+    bench <span class="string">"f2"</span> (<span class="keyword">fun</span> () <span class="keywordsign">-&gt;</span> f2 fd);
+  ])
+  ~init:<span class="constructor">Unix</span>.(<span class="keyword">fun</span> () <span class="keywordsign">-&gt;</span> openfile path [<span class="constructor">O_RDONLY</span>] 0)
+  ~fini:<span class="constructor">Unix</span>.close
+</code></pre>
+<p>Using a group to delay construction of data:</p>
+
+<pre class="codepre"><code class="code"><span class="keyword">let</span> bm = group_f <span class="string">"big data"</span> (<span class="keyword">fun</span> () <span class="keywordsign">-&gt;</span>
+  <span class="keyword">let</span> really_big_value = ... <span class="keyword">in</span>
+  [ bench <span class="string">"f"</span> (<span class="keyword">fun</span> () <span class="keywordsign">-&gt;</span> f really_big_value) ]
+  ) ~init:ignore ~fini:ignore
+</code></pre>
+<p>Independent variable.</p>
+
+<p>Creates a group, containing 3 subgroups. Each subgroup instantiates <code class="code">f1</code> and
+  <code class="code">f2</code> with a different argument. Leaf-level benchmarks are annotated with the
+  argument, keyed by <code class="code">en</code>.</p>
+
+<pre class="codepre"><code class="code"><span class="keyword">let</span> pp_int ppf = <span class="constructor">Format</span>.fprintf ppf <span class="string">"%d"</span>
+<span class="keyword">let</span> en = <span class="constructor">Attr</span>.key pp_int ~name:<span class="string">"en"</span>
+
+<span class="keyword">let</span> bm =
+  <span class="keyword">let</span> g n = group (<span class="constructor">Format</span>.sprintf <span class="string">"size %d"</span> n) [
+    bench ~attr:(en n) <span class="string">"f1"</span> (<span class="keyword">fun</span> () <span class="keywordsign">-&gt;</span> f1 n);
+    bench ~attr:(en n) <span class="string">"f2"</span> (<span class="keyword">fun</span> () <span class="keywordsign">-&gt;</span> f2 n);
+  ] <span class="keyword">in</span>
+  group <span class="string">"effs"</span> @@ <span class="constructor">List</span>.map g [1; 10; 100]
+</code></pre></body></html>

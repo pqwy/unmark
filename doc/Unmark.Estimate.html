@@ -144,13 +144,25 @@
 <p><a href=" https://en.wikipedia.org/wiki/Theil%E2%80%93Sen_estimator">
       Theil–Sen Estimator</a> is an order-based linear regression.</p>
 
-<p>It is robust in that the result is unaffected by even a relatively large
-      proportion of outliers. This means that TSE is less affected by the
-      measurement noise, and has good stability across runs.</p>
+<p>It provides a robust estimation in the sense that</p>
+<ul>
+<li>the result is unaffected by even a relatively large proportion of
+      outliers (about 30%); and</li>
+<li>there is no assumption on the error distribution,</li>
+</ul>
+<p>making TSE resilient against the skewed benchmark noise, and giving it
+      good stability across runs.</p>
 
-<p>Note that by design, TSE does not maximize <code class="code">R²</code>. This can lead to perfectly
-      good estimates having a lower <code class="code">R²</code>, or being flagged with having poor
-      <a href="Unmark.Estimate.html#VALvalidity"><code class="code">validity</code></a>.</p>
+<p>Note that by design, TSE does not maximize <code class="code">R²</code>. For this reason, <code class="code">R²</code> is
+      not an entirely accurate way of assessing goodness-of-fit for this method,
+      since perfectly good estimates are sometimes flagged as having poor
+      <a href="Unmark.Estimate.html#VALvalidity"><code class="code">validity</code></a>. A particular failure case happens with results
+      resembling a step-function, where TSE sometimes (correctly) assigns a
+      vanishingly small <code class="code">b</code>, and a biased <code class="code">a</code> that offsets the line. Such
+      predictions have an error larger than the sample mean, resulting in a
+      negative <code class="code">R²</code>.</p>
+
+<p>Persistently low <code class="code">R²</code> should be investigated by plotting the results.</p>
 
 <p>TSE is the default estimator in Unmark.</p>
 </div>

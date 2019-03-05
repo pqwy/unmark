@@ -26,6 +26,7 @@ let () =
 
       Pkg.test ~run:false "test/test";
       Pkg.test ~run:false "test/basics";
+      Pkg.test ~run:false "test/est";
       Pkg.test ~run:false "test/naming";
       Pkg.test ~run:false "test/deps";
       Pkg.test ~run:false "test/alloc";

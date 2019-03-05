@@ -399,26 +399,32 @@ module Estimate = struct
   | x when x < 0.98 -> `Meh
   | _               -> `Good
 
+  let min a b: float = if a < b then a else b [@@inline]
+  let max a b: float = if a < b then b else a [@@inline]
   let median3 a b c =
     let a = min a b and b = max a b in if a < c then min b c else a [@@inline]
 
   let kth k xs =
-    let part xs i j =
-      let rec scanu xs p i = if xs.(i) < p then scanu xs p (i + 1) else i in
-      let rec scand xs p j = if xs.(j) > p then scand xs p (j - 1) else j in
-      let rec meet xs p i j =
-        let i = scanu xs p i and j = scand xs p j in
-        if i < j then
-          let x = xs.(i) in
-          xs.(i) <- xs.(j); xs.(j) <- x; meet xs p (i + 1) (j - 1)
-        else j in
-      let p = median3 xs.(i) xs.(j) xs.((j - i) / 2 + i) in
-      meet xs p i j in
+    let open Array in
     let rec go xs k i j =
       if i < j then
-        let x = part xs i j in
-        if k <= x then go xs k i x else go xs k (x + 1) j
-      else xs.(i) in
+        let a = unsafe_get xs i
+        and b = unsafe_get xs j
+        and c = unsafe_get xs ((i + j) / 2) in
+        let p = median3 a b c in
+        let pi =
+          let i = ref i and j = ref j in
+          while unsafe_get xs !i < p do incr i done;
+          while unsafe_get xs !j > p do decr j done;
+          while !i < !j do
+            let x = unsafe_get xs !i in
+            unsafe_set xs !i (unsafe_get xs !j); unsafe_set xs !j x;
+            incr i; while unsafe_get xs !i < p do incr i done;
+            decr j; while unsafe_get xs !j > p do decr j done
+          done;
+          !j in
+        if k <= pi then go xs k i pi else go xs k (pi + 1) j
+      else unsafe_get xs i in
     go xs k 0 (Array.length xs - 1)
 
   (* TODO: Interpolation. *)
@@ -452,7 +458,7 @@ module Estimate = struct
    * Kendall T distribution is obtained by approximating Kendall τ with a
    * gaussian, variance [2 (2n + 5) / 9n (n - 1)], and scaling that up by
    * [n (n - 1) / 2], giving the magic for [w], below. This is same as [1]
-   * (eqn 2.6), but without the "standard correction for ties observations."
+   * (eqn 2.6), but without the "standard correction for tied observations."
    *
    * References:
    * 1 - P. K. Sen, "Estimates of the Regression Coefficient Based on Kendall's

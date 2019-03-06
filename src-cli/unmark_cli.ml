@@ -130,8 +130,7 @@ let info name =
 
 ; `P "Filtering restricts the run to a subset of benchmarks. Specifying \
       multiple queries selects the benchmarks that match any of them."
-; `P "For more information, see the filtering documentation in \
-      $(i,Unmark.Benchmarks) [1]."
+; `P "For more information, see the filtering documentation (1)."
 ; `Pre "[1] - https://pqwy.github.io/unmark/doc/Unmark.Benchmarks.html#filtering"
 
 ; `S Manpage.s_examples
@@ -213,9 +212,8 @@ let t bm_def ~probe ~suite ~arg f =
   $$ arg $ t_log_level $ (t_b_run bm_def) $ t_outputs $ w $ nfo)
 
 let probe = Measurement.Probe.gc_counters
-let min_t, min_s = (1., 10)
 
-let main_ext ?(probe = probe) ?(min_t = min_t) ?(min_s = min_s)
+let main_ext ?(probe = probe) ?(min_t = 1.) ?(min_s = 10)
              ?(def_filter = []) ~arg suite f =
   let term = t (min_t, min_s, def_filter) ~probe ~suite ~arg f in
   Term.eval (term, info suite) |> Term.exit

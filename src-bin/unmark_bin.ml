@@ -467,8 +467,7 @@ let info =
 
 ; `P "Filtering restricts analysis to a subset of benchmarks. Specifying \
       multiple queries selects the benchmarks that match any of them."
-; `P "For more information, see the filtering documentation in \
-      $(i,Unmark.Benchmarks) [1]."
+; `P "For more information, see the filtering documentation (1)."
 ; `Pre "[1] - https://pqwy.github.io/unmark/doc/Unmark.Benchmarks.html#filtering"
 
 
@@ -478,13 +477,13 @@ let info =
       counter from the sequence of measurements: Ordinary Least Squares (OLS), \
       which is faster, and Theil-Sen Estimator (TSE), which is more robust."
 
-; `P "$(mname) defaults to TSE. Consult the documentation for \
-      $(i,Unmark.Estimate) [1] for more information."
+; `P "$(mname) defaults to TSE. Consult the documentation on estimators (1) \
+      for more information."
 
 ; `P "If $(i,--r2) is `auto', estimates are highlited when \
-      $(i,Unmark.Estimate.validity) is $(i,`Bad)  or $(i,`Meh), and \
+      $(i,Estimate.validity) is $(i,`Bad)  or $(i,`Meh), and \
       $(i,R^2) values are shown when validity is $(i,`Bad). \
-      Consult the documentation for $(i,validity) [2] for more information."
+      Consult the documentation on $(i,validity) (2) for more information."
 
 ; `Pre "[1] - https://pqwy.github.io/unmark/doc/Unmark.Estimate.html#estimators\n\
         [2] - https://pqwy.github.io/unmark/doc/Unmark.Estimate.html#VALvalidity"

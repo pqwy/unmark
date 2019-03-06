@@ -4,12 +4,12 @@
 
 **WORK-IN-PROGRESS. API COULD CHANGE.**
 
-unmark is a benchmarking library with a focus on the small end of the scale.
+Unmark is a benchmarking library with a focus on the small end of the scale.
 
 Its essential purpose is to verify assumptions about the influence of certain
-programming patterns on program efficiency, answering questions like "Is
-avoiding this allocation worthwhile?", "Is this indirect call really bad?", or
-"Is the loop thrashing the cache?"
+programming patterns on program efficiency, answering questions like _"Is
+avoiding this allocation worthwhile?"_, _"Is this indirect call really bad?"_, or
+_"Is the loop thrashing the cache?"_
 
 It can also be used to establish the performance baselines, and to track the
 evolution of performance in a given code base.
@@ -18,36 +18,44 @@ Special attention is devoted to evolving the benchmark code. It is easy to save
 baselines, add ad-hoc benchmarks, or reuse poorly organized benchmarking code.
 It is possible to compare results from a single, or across multiple runs.
 
-unmark is less suitable for benchmarking entire systems, and particularly
+Unmark is less suitable for benchmarking entire systems, and particularly
 unsuitable for benchmarking concurrency.
 
-unmark is a product of stealing great ideas from [Criterion][criterion] and
-[Core\_bench][core-bench] — in particular, benchmark-by-regression. It shares
-many similarities with them as a consequence.
+Unmark is a product of stealing great ideas from [Criterion][criterion] and
+[Core\_bench][core-bench]. As a consequence, it shares many similarities with
+both.
 
-unmark is distributed under the ISC license.
+Unmark is distributed under the ISC license.
 
 Homepage: https://github.com/pqwy/unmark
 
 <img src="https://github.com/pqwy/unmark/blob/promo/reglines.png" width="800"/>
 
-[jupyter]: https://jupyter.org
 [criterion]: http://www.serpentine.com/criterion
 [core-bench]: https://github.com/janestreet/core_bench
 
-## Library structure
+## Structure
 
-The library contains five parts:
+Unmark separates benchmarks definition, running and analysis:
 
-- `unmark` (`src/`) is needed to define, run, and analyse benchmarks.
-- `unmark.cli` (`src-cli/`) wraps benchmarks into standalone programs.
-- `unmark.papi` (`src-papi/`) provides access to hardware performance counters.
-- `unmark` executable (`src-bin/`) prints reports on the command-line.
+- `unmark` library (`src/`) is needed to define benchmarks.
+- `unmark.cli` library (`src-cli/`) is needed to create standalone programs that
+  run them.
+- `unmark.papi` library (`src-papi/`) provides access to hardware performance
+  counters using [PAPI][ocaml-papi].
+- `unmark` executable (`src-bin/`) analyses the results and prints reports on
+  the command-line.
 - `src-python/` provides access to the benchmark results from Python. It is
   intended to be used from [Jupyter][jupyter].
 
-`unmark` depends only on `unix` and `logs`. Other parts are less conservative
-with their dependencies.
+The `unmark` library depends only on `unix` and `logs`. Other OCaml bits are
+less conservative with their dependencies.
+
+Python code needs Python 3 and `numpy`. It depends on `matplotlib` for plotting,
+and it knows how to make use of `scipy` if installed.
+
+[ocaml-papi]: https://github.com/pqwy/ocaml-papi
+[jupyter]: https://jupyter.org
 
 ## Documentation
 
@@ -117,11 +125,24 @@ Change again. Compare the last run with a throwaway run of `gee`:
 $ (tail -n1 bench.json && ./shebang --filter gee --out) | unmark
 ```
 
-Check the measurement stability of `time` and `L1_TSC`:
-```sh
-for x in {1..5}; do
-  ./shebang --note "run $x" --out
-done | unmark --counters time,L1_TSC
+### Plugging in measurements
+
+More details about the GC:
+
+```OCaml
+open Unmark
+let () =
+  Unmark_cli.main "Gulp" [ ... ]
+    ~probe:Measurement.Probe.gc_counters
+```
+
+Hardware counters (cache misses):
+
+```OCaml
+open Unmark
+let () =
+  Unmark_cli.main "Tikk tokk" [ ... ]
+    ~probe:(Unmark_papi.of_events Papi.[L1_TCM; L2_TCM; L3_TCM])
 ```
 
 ### Python
